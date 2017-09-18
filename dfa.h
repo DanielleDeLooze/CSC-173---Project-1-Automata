@@ -81,4 +81,14 @@ extern bool DFA_execute(DFA dfa, char *input);
  */
 extern void DFA_print(DFA dfa);
 
+/*
+return a descriptiong of the pattern this DFA recognizes
+*/
+extern char* DFA_get_description(DFA dfa);
+
+/*
+set a description descriping the patter recognized
+*/
+extern void DFA_set_description(DFA dfa, char* description);
+
 #endif
