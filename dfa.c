@@ -21,8 +21,7 @@ struct DFA {
 DFA DFA_new(int nstates){
   DFA dfa = (DFA)malloc(sizeof(struct DFA));
   dfa->states = nstates;
-  dfa->transitions = (int**)calloc(nstates+1, sizeof(int*));
-  dfa->transitions[nstates+1] =NULL;
+  dfa->transitions = (int**)calloc(nstates, sizeof(int*));
   dfa->accepting_states = (bool*)calloc(nstates, sizeof(bool));
   for(int i = 0; i <nstates; i++){
     dfa->transitions[i] = (int*)calloc(123, sizeof(int));

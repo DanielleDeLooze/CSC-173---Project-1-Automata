@@ -5,7 +5,7 @@
 # Time-stamp: <Tue Aug  8 10:34:37 EDT 2017 ferguson>
 #
 
-PROGRAMS = IntSet_test LinkedList_test DFA_test
+PROGRAMS = IntSet_test LinkedList_test DFA_test NFA_test
 CC = gcc
 CFLAGS = -g -std=c99 -Wall -Werror
 
@@ -18,6 +18,9 @@ LinkedList_test: LinkedList_test.o LinkedList.o
 	$(CC) -o $@ $^
 
 DFA_test: DFA_test.o dfa.o
+	$(CC) -o $@ $^
+
+NFA_test: NFA_test.o nfa.o IntSet.o
 	$(CC) -o $@ $^
 
 clean:
