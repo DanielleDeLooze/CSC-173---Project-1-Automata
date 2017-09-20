@@ -18,7 +18,7 @@ struct IntSet {
     intset_t bits;
 };
 
-#define NUMBITS (sizeof(intset_t)*8)
+#define NUMBITS (sizeof(intset_t)*4) //CHANGE TO 8 ON LINUX
 
 /**
  * Allocate, initialize and return a new (empty) IntSet.

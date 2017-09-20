@@ -11,25 +11,21 @@ Purpose: CSC 173 Project 1 Part 2. Implementation of NFA
 #include "IntSet.h"
 #include "nfa.h"
 
-struct NFA {
-  IntSet** transitions_subsets;
+struct NFA{
+  IntSet** transitions;
   int states;
-  int* accepting;
+  IntSet accepting;
   char* description;
 };
 
 NFA NFA_new(int nstates){
-  NFA nfa = (NFA)malloc(sizeof(NFA));
+  NFA nfa = (NFA)malloc(sizeof(struct NFA));
+  nfa->accepting = IntSet_new();
   nfa->states = nstates;
-  nfa->transitions_subsets = (IntSet**)calloc(nstates, sizeof(IntSet*));
-  nfa->accepting = (int*)calloc(nstates, sizeof(int));
+  nfa->transitions= (IntSet**)calloc(nstates, sizeof(IntSet*));
   for(int i =0; i < nstates; i++){
-    nfa->transitions_subsets[i] = (IntSet*)calloc(123, sizeof(IntSet));
-    for(int j = 0; j < 123; j++){
-      nfa->transitions_subsets[i][j] = IntSet_new();
+    nfa->transitions[i] = (IntSet*)calloc(123, sizeof(IntSet));
     }
-    printf("\n");
-  }
 
   return nfa;
 }
@@ -37,13 +33,11 @@ NFA NFA_new(int nstates){
 void NFA_free(NFA nfa){
   for(int i = 0; i < nfa->states; i++){
     for(int j = 0; j<123; j++){
-      free(nfa->transitions_subsets[i][j]);
+      free(nfa->transitions[i][j]);
     }
-    free(nfa->transitions_subsets[i]);
+    free(nfa->transitions[i]);
   }
   free(nfa->accepting);
-  free(nfa->description);
-  free(nfa);
 }
 
 int NFA_get_size(NFA nfa){
@@ -52,49 +46,74 @@ int NFA_get_size(NFA nfa){
 
 IntSet NFA_get_transitions(NFA nfa, int state, char sym){
   int x = sym;
-  return nfa->transitions_subsets[state][x];
+  return nfa->transitions[state][x];
 }
 
-void NFA_add_transition(NFA nfa,int src, char sym, int dst){
+void NFA_add_transition(NFA nfa,int src, char sym, IntSet dst){
   int x = sym;
-  IntSet_add(nfa->transitions_subsets[src][x], dst);
+  nfa->transitions[src][x] = dst;
 }
 
-void NFA_add_transition_str(NFA nfa, int src, char *str, int dst){
+void NFA_add_transition_str(NFA nfa, int src, char *str, IntSet dst){
   for(char* pointer = str; *pointer != '\0'; pointer++){
     int x = *pointer;
-    IntSet_add(nfa->transitions_subsets[src][x], dst);
+    nfa->transitions[src][x] = dst;
   }
 }
 
-void NFA_add_transition_all(NFA nfa, int src, int dst){
+void NFA_add_transition_all(NFA nfa, int src, IntSet dst){
   for(int i = 0; i < 123; i++){
-    IntSet_add(nfa->transitions_subsets[src][i], dst);
+    nfa->transitions[src][i] = dst;
   }
 }
 
-void NFA_set_accepting(NFA nfa, int state, bool value){
-  nfa->accepting[state] = value;
+void NFA_set_accepting(NFA nfa, int state){
+  IntSet_add(nfa->accepting, state);
 }
 
-bool NFA_get_accepting(NFA nfa, int state){
-  return nfa->accepting[state];
+IntSet NFA_get_accepting(NFA nfa){
+  return nfa->accepting;
 }
 
-/*
-bool NFA_execute(NFA nfa, char *input){
-  int current = 0;
+
+bool NFA_execute(NFA nfa, char* input){
+  IntSet current = IntSet_new();
+  IntSet_add(current, 0);
+
   while(*input != '\0'){
-    NFA_get_transition(nfa, current, *input);
+    int x = *input;
+    IntSetIterator iterator = IntSet_iterator(current);
+    IntSet temp = IntSet_new();
+    while(IntSetIterator_has_next(iterator)){
+      IntSet_union(temp, NFA_get_transitions(nfa, IntSetIterator_next(iterator), x));
+    }
+    current = temp;
+    input++;
   }
-}*/
+
+  IntSetIterator accepting = IntSet_iterator(nfa->accepting);
+  while(IntSetIterator_has_next(accepting)){
+    if(IntSet_contains(current, IntSetIterator_next(accepting))){
+      return true;
+    }
+  }
+  return false;
+}
 
 void NFA_print(NFA nfa){
   for(int i = 0; i < nfa->states; i++){
-    printf("State %d ", i);
+    printf("State %d: ", i);
     for(int j = 0; j < 123; j++){
-      IntSet_print(nfa->transitions_subsets[i][j]);
+      IntSet_print(nfa->transitions[i][j]);
     }
     printf("\n");
   }
+}
+
+void NFA_set_description(NFA nfa, char* desc){
+  nfa->description = desc;
+}
+
+char* NFA_get_description(NFA nfa){
+  return nfa->description;
 }

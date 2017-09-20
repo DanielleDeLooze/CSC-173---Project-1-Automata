@@ -43,27 +43,27 @@ extern IntSet NFA_get_transitions(NFA nfa, int state, char sym);
  * For the given NFA, add the state dst to the set of next states from
  * state src on input symbol sym.
  */
-extern void NFA_add_transition(NFA nfa, int src, char sym, int dst);
+extern void NFA_add_transition(NFA nfa, int src, char sym, IntSet dst);
 
 /**
  * Add a transition for the given NFA for each symbol in the given str.
  */
-extern void NFA_add_transition_str(NFA nfa, int src, char *str, int dst);
+extern void NFA_add_transition_str(NFA nfa, int src, char *str, IntSet dst);
 
 /**
  * Add a transition for the given NFA for each input symbol.
  */
-extern void NFA_add_transition_all(NFA nfa, int src, int dst);
+extern void NFA_add_transition_all(NFA nfa, int src, IntSet dst);
 
 /**
  * Set whether the given NFA's state is accepting or not.
  */
-extern void NFA_set_accepting(NFA nfa, int state, bool value);
+extern void NFA_set_accepting(NFA nfa, int state);
 
 /**
  * Return true if the given NFA's state is an accepting state.
  */
-extern bool NFA_get_accepting(NFA nfa, int state);
+extern IntSet NFA_get_accepting(NFA nfa);
 
 /**
  * Run the given NFA on the given input string, and return true if it accepts
@@ -75,5 +75,9 @@ extern bool NFA_execute(NFA nfa, char *input);
  * Print the given NFA to System.out.
  */
 extern void NFA_print(NFA nfa);
+
+extern void NFA_set_description(NFA nfa, char* description);
+
+extern char* NFA_get_description(NFA nfa);
 
 #endif

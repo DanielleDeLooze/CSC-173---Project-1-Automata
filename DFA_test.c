@@ -4,7 +4,7 @@
 #include "dfa.h"
 
 void Automaton_Tester(DFA dfa){
-  printf("Automaton Description: %s \n", DFA_get_description(dfa));
+  printf("DFA Automaton Description: %s \n", DFA_get_description(dfa));
   char control = 'Y';
 
   while (control != 'N' ){
