@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "dfa.h"
-
+/*
 void Automaton_Tester(DFA dfa){
-  printf("Automaton Description: %s \n", DFA_get_description(dfa));
+  printf("DFA Automaton Description: %s \n", DFA_get_description(dfa));
   char control = 'Y';
 
   while (control != 'N' ){
@@ -20,6 +20,7 @@ void Automaton_Tester(DFA dfa){
 
 
 }
+*/
 
 
 int main(int argc, char **argv){
@@ -35,6 +36,8 @@ int main(int argc, char **argv){
   DFA_set_description(ab, "This automaton recognizes the string 'ab'");
   Automaton_Tester(ab);
 
+  free(ab);
+
   //Automaton that recognizes any string starting with 'ab'
   DFA start_ab = DFA_new(3);
   for(int i = 0; i < 3; i++){
@@ -46,6 +49,7 @@ int main(int argc, char **argv){
   DFA_set_transition_all(start_ab, 2, 2);
   DFA_set_description(start_ab, "This automaton recognizes any string starting with 'ab'");
   Automaton_Tester(start_ab);
+  free(start_ab);
 
   //Automaton that recognizes binary input with even number of 1's
   DFA even_ones = DFA_new(2);
@@ -59,6 +63,7 @@ int main(int argc, char **argv){
   DFA_set_accepting(even_ones, 0, true);
   DFA_set_description(even_ones, "This automaton recognizes a binary input with an even number of ones");
   Automaton_Tester(even_ones);
+  free(even_ones);
 
   //Automaton that recognizes binary input with even number of 0's and 1's
   DFA even = DFA_new(4);
@@ -76,6 +81,7 @@ int main(int argc, char **argv){
   DFA_set_accepting(even, 0, true);
   DFA_set_description(even, "This automaton recognizes a binary input with an even number of 1's and 0's");
   Automaton_Tester(even);
+  free(even);
 
   //Automaton that regcognizes binary input that starts and ends with 1
   DFA ones = DFA_new(3);
@@ -90,6 +96,7 @@ int main(int argc, char **argv){
   DFA_set_accepting(ones, 2, true);
   DFA_set_description(ones, "This automaton recognizes a binary input that starts and ends with a 1");
   Automaton_Tester(ones);
+  free(ones);
   return 0;
 
 }

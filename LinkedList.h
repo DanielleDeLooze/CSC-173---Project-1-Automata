@@ -101,4 +101,6 @@ extern void *LinkedListIterator_next(LinkedListIterator *iterator);
  */
 extern void LinkedList_print_string_list(LinkedList *list);
 
+extern int LinkedList_get_size(LinkedList* list);
+
 #endif

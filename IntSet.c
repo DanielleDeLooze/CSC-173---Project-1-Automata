@@ -18,7 +18,7 @@ struct IntSet {
     intset_t bits;
 };
 
-#define NUMBITS (sizeof(intset_t)*8)
+#define NUMBITS (sizeof(intset_t)*4) //CHANGE TO 8 ON LINUX
 
 /**
  * Allocate, initialize and return a new (empty) IntSet.
@@ -88,7 +88,7 @@ bool
 IntSet_contains_all(IntSet set1, IntSet set2) {
     return (set1->bits | set2->bits) == set1->bits;
 }
-    
+
 /**
  * Return true if the two given IntSets contain exactly the same members,
  * otherwise false.
@@ -209,4 +209,3 @@ IntSet_to_string(IntSet set) {
     free(iterator);
     return result;
 }
-    
