@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]) {
   DFA_set_transition(ab, 1, 'b', 2);
   DFA_set_accepting(ab, 2, true);
   DFA_set_description(ab, "This automaton recognizes the string 'ab'");
-  Automaton_Tester(ab);
+  //Automaton_Tester(ab);
 
   free(ab);
 
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
   DFA_set_accepting(start_ab, 2, true);
   DFA_set_transition_all(start_ab, 2, 2);
   DFA_set_description(start_ab, "This automaton recognizes any string starting with 'ab'");
-  Automaton_Tester(start_ab);
+  //Automaton_Tester(start_ab);
   free(start_ab);
 
   //Automaton that recognizes binary input with even number of 1's
@@ -51,7 +51,7 @@ int main(int argc, char const *argv[]) {
   DFA_set_transition(even_ones, 0, '0', 0);
   DFA_set_accepting(even_ones, 0, true);
   DFA_set_description(even_ones, "This automaton recognizes a binary input with an even number of ones");
-  Automaton_Tester(even_ones);
+  //Automaton_Tester(even_ones);
   free(even_ones);
 
   //Automaton that recognizes binary input with even number of 0's and 1's
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]) {
   DFA_set_transition(even, 0, '0', 2);
   DFA_set_accepting(even, 0, true);
   DFA_set_description(even, "This automaton recognizes a binary input with an even number of 1's and 0's");
-  Automaton_Tester(even);
+  //Automaton_Tester(even);
   free(even);
 
   //Automaton that regcognizes binary input that starts and ends with 1
@@ -84,7 +84,7 @@ int main(int argc, char const *argv[]) {
   DFA_set_transition(ones, 2, '1', 2);
   DFA_set_accepting(ones, 2, true);
   DFA_set_description(ones, "This automaton recognizes a binary input that starts and ends with a 1");
-  Automaton_Tester(ones);
+  //Automaton_Tester(ones);
   free(ones);
 
 
@@ -121,7 +121,7 @@ int main(int argc, char const *argv[]) {
 
   NFA_set_accepting(man, 3);
 
-  Automaton_tester(man);
+//  Automaton_tester(man);
 
 
   //NFA that recognizes any string with more w's,a's,s's,h's,i's,n's,t's, or o's than the string 'Washington'
@@ -215,7 +215,7 @@ int main(int argc, char const *argv[]) {
 
   NFA_add_transition_all(washington, 11, eleven);
 
-  Automaton_tester(washington);
+  //Automaton_tester(washington);
 
 
 
@@ -263,11 +263,20 @@ int main(int argc, char const *argv[]) {
  NFA_add_transition(web, 10, 'r', eleven);
  NFA_add_transition(web, 11, 'g', twelve);
 
- Automaton_tester(web);
+ //Automaton_tester(web);
 
  //using the translate function
+
  DFA man_dfa = translate(man);
  Automaton_Tester(man_dfa);
+
+ DFA web_dfa = translate(web);
+ Automaton_Tester(web_dfa);
+
+ DFA washington_dfa = translate(washington);
+ Automaton_Tester(washington_dfa);
+
+
 
   return 0;
 }

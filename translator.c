@@ -23,12 +23,10 @@ DFA translate(NFA nfa){
   int index = -1;
   int original_size = 1;
 
-
 do{
   original_size = LinkedList_get_size(list);
   index++;
   IntSet subset = LinkedList_element_at(list, index);
-
   for(int i = 0; i <128; i++){
     IntSetIterator subset_iterator = IntSet_iterator(subset);
     IntSet temp = IntSet_new();
@@ -39,8 +37,8 @@ do{
       LinkedList_add_at_end(list, temp);
     }
   }
+}while((LinkedList_get_size(list) != original_size) || ((index + 1) != LinkedList_get_size(list)));
 
-}while((LinkedList_get_size(list) != original_size) && ((index + 1) != LinkedList_get_size(list)));
 
 DFA dfa = DFA_new(LinkedList_get_size(list));
 
@@ -57,8 +55,32 @@ while(LinkedListIterator_has_next(accepting_iterator)){
   incr++;
 }
 
+
 DFA_set_description(dfa, NFA_get_description(nfa));
 
+original_size = 0;
+index = -1;
+do{
+  original_size = LinkedList_get_size(list);
+  index++;
+  IntSet subset = LinkedList_element_at(list, index);
+  for(int i = 0; i <128; i++){
+    IntSetIterator subset_iterator = IntSet_iterator(subset);
+    IntSet temp = IntSet_new();
+    while(IntSetIterator_has_next(subset_iterator)){
+      IntSet_union(temp, NFA_get_transitions(nfa, IntSetIterator_next(subset_iterator), i));
+    }
+    int current = 0;
+    while(!IntSet_equals(temp, LinkedList_element_at(list, current))){
+      current++;
+    }
+    char x = i;
+    DFA_set_transition(dfa, index, x, current );
+  }
+}while((LinkedList_get_size(list) != original_size) || ((index + 1) != LinkedList_get_size(list)));
+
+
+/*
 for(int index = 0; index < DFA_get_size(dfa); index++){
   IntSet subset = LinkedList_element_at(list, index);
   for(int i = 0; i <128; i++){
@@ -74,19 +96,22 @@ for(int index = 0; index < DFA_get_size(dfa); index++){
     char x = i;
     DFA_set_transition(dfa, index, x, current );
   }
+  printf("%d ", index);
 }
+*/
 
 return dfa;
-
-
-
-
 /*
 LinkedListIterator* iterator = LinkedList_iterator(list);
 while(LinkedListIterator_has_next(iterator)){
   IntSet_print(LinkedListIterator_next(iterator));
 }
 */
+
+
+
+
+
 /*
 free(iterator);
 LinkedList_free(list, true);
