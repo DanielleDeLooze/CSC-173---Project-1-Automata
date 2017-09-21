@@ -91,4 +91,6 @@ set a description descriping the patter recognized
 */
 extern void DFA_set_description(DFA dfa, char* description);
 
+extern void Automaton_Tester(DFA dfa);
+
 #endif

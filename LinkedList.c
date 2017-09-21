@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "LinkedList.h"
+#include "IntSet.h"
 
 /**
  * Toplevel LinkedList structure.
@@ -15,6 +16,7 @@
 struct LinkedList {
     struct LinkedListNode *first;
     struct LinkedListNode *last;
+    int size;
 };
 
 /**
@@ -33,6 +35,7 @@ LinkedList *
 LinkedList_new() {
     LinkedList *list = (LinkedList*)malloc(sizeof(LinkedList));
     list->first = list->last = NULL;
+    list->size = 0;
     return list;
 }
 
@@ -85,10 +88,12 @@ LinkedList_add_at_front(LinkedList *list, void *data) {
     node->next = list->first;
     if (list->first != NULL) {
 	list->first->prev = node;
+  list->size = list->size + 1;
     }
     list->first = node;
     if (list->last == NULL) {
 	list->last = node;
+  list->size = list->size + 1;
     }
 }
 
@@ -98,6 +103,7 @@ LinkedList_add_at_front(LinkedList *list, void *data) {
 void
 LinkedList_add_at_end(LinkedList *list, void *data) {
     LinkedListNode *node = LinkedListNode_new(data);
+    list->size = list->size + 1;
     node->prev = list->last;
     if (list->last != NULL) {
 	list->last->next = node;
@@ -114,7 +120,7 @@ LinkedList_add_at_end(LinkedList *list, void *data) {
 bool
 LinkedList_contains(const LinkedList *list, void *data) {
     for (LinkedListNode *node=list->first; node != NULL; node=node->next) {
-	if (node->data == data) {
+	if (IntSet_equals(node->data, data)) {
 	    return true;
 	}
     }
@@ -145,7 +151,7 @@ LinkedList_remove(LinkedList *list, void *data) {
 	    return;
 	}
     }
-}    
+}
 
 /**
  * Return the void* value at the given index in the given LinkedList, or
@@ -239,4 +245,8 @@ LinkedList_print_string_list(LinkedList *list) {
 	}
     }
     printf("\n");
+}
+
+int LinkedList_get_size(LinkedList* list){
+  return list->size;
 }

@@ -80,4 +80,6 @@ extern void NFA_set_description(NFA nfa, char* description);
 
 extern char* NFA_get_description(NFA nfa);
 
+extern void Automaton_tester(NFA nfa);
+
 #endif

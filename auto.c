@@ -1,17 +1,94 @@
 /*
 Author: Danielle DeLooze
-Date: 9/17/2017
-Purpose: Test NFA implementation
+Date: 9/20/2017
+Purpose: CSC 173 Project 1
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include "IntSet.h"
+#include "dfa.h"
 #include "nfa.h"
+#include "IntSet.h"
+#include "LinkedList.h"
+#include "translate.h"
 
-int main(int argc, char **argv){
-  //NFA that recognizes any string ending in 'man'
+int main(int argc, char const *argv[]) {
+  //DFA examples and testing
+  DFA ab = DFA_new(3);
+  for(int i = 0; i < 3; i++){ //if an incorrect input is entered that causes the automaton to fail, this will catch it
+    DFA_set_transition_all(ab, i, -1);
+  }
+  DFA_set_transition(ab, 0, 'a', 1);
+  DFA_set_transition(ab, 1, 'b', 2);
+  DFA_set_accepting(ab, 2, true);
+  DFA_set_description(ab, "This automaton recognizes the string 'ab'");
+  Automaton_Tester(ab);
+
+  free(ab);
+
+  //Automaton that recognizes any string starting with 'ab'
+  DFA start_ab = DFA_new(3);
+  for(int i = 0; i < 3; i++){
+    DFA_set_transition_all(start_ab, i, -1);
+  }
+  DFA_set_transition(start_ab, 0, 'a', 1);
+  DFA_set_transition(start_ab, 1, 'b', 2);
+  DFA_set_accepting(start_ab, 2, true);
+  DFA_set_transition_all(start_ab, 2, 2);
+  DFA_set_description(start_ab, "This automaton recognizes any string starting with 'ab'");
+  Automaton_Tester(start_ab);
+  free(start_ab);
+
+  //Automaton that recognizes binary input with even number of 1's
+  DFA even_ones = DFA_new(2);
+  for(int i =0; i<2; i++){ //since 0 is accepting, we default everything but 1 and 0 to a false state
+    DFA_set_transition_all(even_ones, i, -1);
+  }
+  DFA_set_transition(even_ones, 0, '1', 1);
+  DFA_set_transition(even_ones, 1, '1', 0);
+  DFA_set_transition(even_ones, 1, '0', 1);
+  DFA_set_transition(even_ones, 0, '0', 0);
+  DFA_set_accepting(even_ones, 0, true);
+  DFA_set_description(even_ones, "This automaton recognizes a binary input with an even number of ones");
+  Automaton_Tester(even_ones);
+  free(even_ones);
+
+  //Automaton that recognizes binary input with even number of 0's and 1's
+  DFA even = DFA_new(4);
+  for(int i = 0; i < 4; i++){
+    DFA_set_transition_all(even, i, -1);
+  }
+  DFA_set_transition(even, 0, '1', 1);
+  DFA_set_transition(even, 1, '1', 0);
+  DFA_set_transition(even, 1, '0', 3);
+  DFA_set_transition(even, 3, '0', 1);
+  DFA_set_transition(even, 3, '1', 2);
+  DFA_set_transition(even, 2, '1', 3);
+  DFA_set_transition(even, 2, '0', 0);
+  DFA_set_transition(even, 0, '0', 2);
+  DFA_set_accepting(even, 0, true);
+  DFA_set_description(even, "This automaton recognizes a binary input with an even number of 1's and 0's");
+  Automaton_Tester(even);
+  free(even);
+
+  //Automaton that regcognizes binary input that starts and ends with 1
+  DFA ones = DFA_new(3);
+  for(int i = 0; i < 3; i++){
+    DFA_set_transition_all(ones, i, -1);
+  }
+  DFA_set_transition(ones, 0, '1', 1);
+  DFA_set_transition(ones, 1, '0', 1);
+  DFA_set_transition(ones, 1, '1', 2);
+  DFA_set_transition(ones, 2, '0', 1);
+  DFA_set_transition(ones, 2, '1', 2);
+  DFA_set_accepting(ones, 2, true);
+  DFA_set_description(ones, "This automaton recognizes a binary input that starts and ends with a 1");
+  Automaton_Tester(ones);
+  free(ones);
+
+
+  //NFA example and testing
   NFA man = NFA_new(4);
   NFA_set_description(man, "This automaton will return true for any string ending with 'man'");
 
@@ -44,11 +121,9 @@ int main(int argc, char **argv){
 
   NFA_set_accepting(man, 3);
 
-  NFA_print(man);
+  Automaton_tester(man);
 
-  //Automaton_tester(man);
 
-  free(man);
   //NFA that recognizes any string with more w's,a's,s's,h's,i's,n's,t's, or o's than the string 'Washington'
   NFA washington = NFA_new(12);
   NFA_set_description(washington, "This automata recognizes any string with more w's,a's,s's,t's,h's,i's,n's, or 's than the String 'Washington'");
@@ -142,7 +217,7 @@ int main(int argc, char **argv){
 
   Automaton_tester(washington);
 
-  free(washington);
+
 
   //nfa that recognizes strings ending in .com,.edu, or .org. Meant to find valid webadresses
 
@@ -190,7 +265,9 @@ int main(int argc, char **argv){
 
  Automaton_tester(web);
 
- free(web);
+ //using the translate function
+ DFA man_dfa = translate(man);
+ Automaton_Tester(man_dfa);
 
   return 0;
 }

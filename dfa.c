@@ -24,16 +24,18 @@ DFA DFA_new(int nstates){
   dfa->transitions = (int**)calloc(nstates, sizeof(int*));
   dfa->accepting_states = (bool*)calloc(nstates, sizeof(bool));
   for(int i = 0; i <nstates; i++){
-    dfa->transitions[i] = (int*)calloc(123, sizeof(int));
+    dfa->transitions[i] = (int*)calloc(128, sizeof(int));
   }
   return dfa;
 }
 
 void DFA_free(DFA dfa){
-  free(dfa->transitions);
-  dfa->transitions = NULL;
+  for(int i = 0; i < dfa->states; i++){
+      free(dfa->transitions[i]);
+    }
+  free(dfa->accepting_states);
+  free(dfa->description);
   free(dfa);
-  dfa = NULL;
 }
 
 int DFA_get_size(DFA dfa){
@@ -58,7 +60,7 @@ void DFA_set_transition_str(DFA dfa, int src, char* str, int dst){
 }
 
 void DFA_set_transition_all(DFA dfa, int src, int dst){
-  for(int i =0; i<123; i++){
+  for(int i =0; i<128; i++){
     dfa->transitions[src][i] = dst;
   }
 }
@@ -90,14 +92,10 @@ bool DFA_execute(DFA dfa, char* input){
 }
 
 void DFA_print(DFA dfa){
-  printf("\t ");
-  for(int x= 0; x < 123; x++){
-    printf("%c ", x);
-  }
   printf("\n");
   for(int i = 0; i < dfa->states; i++){
     printf("State %d: ", i);
-    for(int j = 0; j<123; j++){
+    for(int j = 0; j<128; j++){
       printf("%d ", dfa->transitions[i][j]);
     }
     printf("\n");
@@ -110,4 +108,20 @@ char* DFA_get_description(DFA dfa){
 
 void DFA_set_description(DFA dfa, char* description){
   dfa->description = description;
+}
+
+void Automaton_Tester(DFA dfa){
+  printf("DFA Automaton Description: %s \n", DFA_get_description(dfa));
+  char control = 'Y';
+
+  while (control != 'N' ){
+    printf("Please enter the string you'd like to test: ");
+    char input[50];
+    scanf("%s", input);
+    bool result = DFA_execute(dfa, input);
+    printf("The string '%s'  %s", input, result? "passes this automaton\n" : "fails this automaton\n");
+    printf("Enter 'N' to stop, 'Y' to continue: ");
+    scanf(" %c", &control);
+    printf("\n");
+  }
 }

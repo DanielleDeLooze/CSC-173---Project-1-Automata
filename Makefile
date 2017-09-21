@@ -5,7 +5,7 @@
 # Time-stamp: <Tue Aug  8 10:34:37 EDT 2017 ferguson>
 #
 
-PROGRAMS = IntSet_test LinkedList_test DFA_test NFA_test
+PROGRAMS = IntSet_test LinkedList_test auto
 CC = gcc
 CFLAGS = -g -std=c99 -Wall -Werror
 
@@ -14,13 +14,10 @@ programs: $(PROGRAMS)
 IntSet_test: IntSet_test.o IntSet.o
 	$(CC) -o $@ $^
 
-LinkedList_test: LinkedList_test.o LinkedList.o
+LinkedList_test: LinkedList_test.o LinkedList.o IntSet.o
 	$(CC) -o $@ $^
 
-DFA_test: DFA_test.o dfa.o
-	$(CC) -o $@ $^
-
-NFA_test: NFA_test.o nfa.o IntSet.o
+auto: auto.o nfa.o dfa.o IntSet.o LinkedList.o translator.o
 	$(CC) -o $@ $^
 
 clean:

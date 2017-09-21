@@ -24,7 +24,7 @@ NFA NFA_new(int nstates){
   nfa->states = nstates;
   nfa->transitions= (IntSet**)calloc(nstates, sizeof(IntSet*));
   for(int i =0; i < nstates; i++){
-    nfa->transitions[i] = (IntSet*)calloc(123, sizeof(IntSet));
+    nfa->transitions[i] = (IntSet*)calloc(128, sizeof(IntSet));
     }
 
   return nfa;
@@ -32,12 +32,13 @@ NFA NFA_new(int nstates){
 
 void NFA_free(NFA nfa){
   for(int i = 0; i < nfa->states; i++){
-    for(int j = 0; j<123; j++){
+    for(int j = 0; j<128; j++){
       free(nfa->transitions[i][j]);
     }
     free(nfa->transitions[i]);
   }
   free(nfa->accepting);
+  free(nfa);
 }
 
 int NFA_get_size(NFA nfa){
@@ -62,7 +63,7 @@ void NFA_add_transition_str(NFA nfa, int src, char *str, IntSet dst){
 }
 
 void NFA_add_transition_all(NFA nfa, int src, IntSet dst){
-  for(int i = 0; i < 123; i++){
+  for(int i = 0; i < 128; i++){
     nfa->transitions[src][i] = dst;
   }
 }
@@ -103,7 +104,7 @@ bool NFA_execute(NFA nfa, char* input){
 void NFA_print(NFA nfa){
   for(int i = 0; i < nfa->states; i++){
     printf("State %d: ", i);
-    for(int j = 0; j < 123; j++){
+    for(int j = 0; j < 128; j++){
       IntSet_print(nfa->transitions[i][j]);
     }
     printf("\n");
@@ -116,4 +117,20 @@ void NFA_set_description(NFA nfa, char* desc){
 
 char* NFA_get_description(NFA nfa){
   return nfa->description;
+}
+
+void Automaton_tester(NFA nfa){
+  printf("NFA Automaton Description: %s \n", NFA_get_description(nfa));
+  char control = 'Y';
+
+  while(control != 'N'){
+    printf("Please enter the string you'd like to test: ");
+    char input[50];
+    scanf("%s", input);
+    bool result = NFA_execute(nfa, input);
+    printf("The string '%s' %s", input, result? "passes this automaton\n" : "fails this automation\n");
+    printf("Enter 'N' to stop, 'Y' to continue: ");
+    scanf(" %c", &control);
+    printf("\n");
+  }
 }
